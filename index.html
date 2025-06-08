@@ -153,6 +153,7 @@
             left: 10%; /* 中央寄せ */
             right: 10%; /* 中央寄せ */
             opacity: 0.95; /* キャプションの透明度を上げて見やすく */
+            color: #ffffff; /* キャプションの文字色も白に */
         }
         .carousel-indicators [data-bs-target] {
             background-color: #42a5f5; /* インジケーターの色 */
@@ -186,7 +187,14 @@
         }
         .col-card p {
             font-size: 0.95rem;
-            opacity: 0.9; /* テキストの透明度を上げて見やすく */
+            color: #ffffff; /* 純粋な白に変更 */
+            opacity: 1; /* 透明度をなくして完全に見やすく */
+        }
+
+        /* text-muted クラスの修正 */
+        .text-muted {
+            color: #cccccc !important; /* 少し明るいグレーに変更し、!importantで確実に適用 */
+            opacity: 1 !important; /* 透明度をなくして完全に見やすく */
         }
     </style>
 </head>
@@ -198,6 +206,8 @@
             <h1 class="display-4 fw-bold mb-3 md:mb-4">Axe1lyze</h1>
             <p class="lead accent-text-cyan opacity-90">
                 未来を拓く、ゆるぎない無気力。
+                <br class="d-block d-md-none">
+                （理念だけは立派です）
             </p>
         </div>
     </header>
@@ -220,7 +230,7 @@
                     <a href="#" class="btn btn-custom btn-lg mt-4 shadow-xl hover:shadow-2xl" aria-disabled="true">
                         次世代への一歩を踏み出す（予定）
                     </a>
-                    <p class="text-muted mt-4 text-sm opacity-85">※このボタンは哲学的な意味合いしか持ちません</p>
+                    <p class="text-muted mt-4 text-sm">※このボタンは哲学的な意味合いしか持ちません</p>
                 </div>
             </div>
         </section>
@@ -279,7 +289,7 @@
                 <div class="col">
                     <div class="col-card h-full">
                         <h4 class="mb-3">戦略的放置</h4>
-                        <p class="text-muted opacity-90">
+                        <p class="text-muted">
                             あらゆる機会を「戦略的に放置」することで、
                             無駄なリソース消費を避け、ある種の効率化を図ります。
                             結果的に何も生まれません。
@@ -289,7 +299,7 @@
                 <div class="col">
                     <div class="col-card h-full">
                         <h4 class="mb-3">革新的傍観</h4>
-                        <p class="text-muted opacity-90">
+                        <p class="text-muted">
                             市場の動向を「革新的に傍観」し、
                             他社の成功と失敗から学ぶ（かもしれない）姿勢を貫きます。
                             行動はしません。
@@ -299,7 +309,7 @@
                 <div class="col">
                     <div class="col-card h-full">
                         <h4 class="mb-3">持続可能な夢想</h4>
-                        <p class="text-muted opacity-90">
+                        <p class="text-muted">
                             具体的な目標設定はせず、
                             「持続可能な夢想」を繰り広げることで、
                             無限の可能性を秘めたまま現状を維持します。
@@ -327,7 +337,7 @@
                         <li><span class="accent-text-blue fw-bold">市場分析:</span> データ収集は完了。分析は追々。</li>
                         <li><span class="accent-text-blue fw-bold">グローバル展開:</span> そのうち、気が向いたら。</li>
                     </ul>
-                    <p class="text-muted mt-4 text-sm opacity-85">※上記の進捗は、宇宙の気まぐれに左右されます</p>
+                    <p class="text-muted mt-4 text-sm">※上記の進捗は、宇宙の気まぐれに左右されます</p>
                 </div>
             </div>
         </section>
