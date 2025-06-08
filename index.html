@@ -3,116 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Axe1lyze | やる気のないホームページ</title>
+    <title>Axe1lyze | 未来を拓く、ゆるぎない無気力</title>
     <!-- Inter フォントの読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <!-- Tailwind CSS CDN (Bootstrapと併用可) -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Base styles with Inter font and high-contrast dark theme */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #212529; /* ダークな背景色 */
-            color: #f8f9fa; /* 明るいテキスト色 */
+            background-color: #121212; /* 非常に深いダーク系の背景色 */
+            color: #f0f0f0; /* 高コントラストの明るいテキスト色 */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.7; /* 行の高さを少し広げて読みやすく */
         }
+
+        /* カスタムユーティリティクラス（テーマカラーと角丸） */
         .header-bg {
-            background-color: #007bff; /* 青系（primary） */
-            padding: 2rem 0;
-            border-bottom-left-radius: 1rem; /* 角丸 */
-            border-bottom-right-radius: 1rem; /* 角丸 */
+            background: linear-gradient(135deg, #0d47a1, #00acc1); /* 深い青から鮮やかなシアンへのグラデーション */
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            border-bottom-left-radius: 2rem;
+            border-bottom-right-radius: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* より強い影 */
         }
-        .section-bg {
-            background-color: #343a40; /* ダークグレー */
-            padding: 3rem 0;
-            margin-top: 2rem;
-            border-radius: 1rem; /* 角丸 */
+        .section-card {
+            background-color: #1e1e1e; /* より深い背景色とのコントラストを出すためのダークグレー */
+            padding: 3.5rem 1.5rem; /* パディングを少し増やす */
+            margin-top: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); /* 影を強調 */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.05); /* 微妙なボーダーで立体感を */
         }
-        .accent-text {
-            color: #17a2b8; /* 水色系（info）をアクセントに */
+        .section-card:hover {
+            transform: translateY(-8px); /* ホバーでさらに浮き上がる */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        }
+        .accent-text-blue {
+            color: #42a5f5; /* 鮮やかな明るい青 */
+        }
+        .accent-text-cyan {
+            color: #00bcd4; /* 鮮やかなシアン */
         }
         .btn-custom {
-            background-color: #007bff; /* ボタンも青系 */
-            border-color: #007bff;
+            background: linear-gradient(45deg, #2196f3, #00bcd4); /* 鮮やかな青からシアンへのグラデーションボタン */
+            border: none;
             color: white;
-            border-radius: 0.5rem; /* 角丸 */
+            padding: 0.85rem 2.5rem; /* ボタンサイズを少し大きく */
+            border-radius: 0.75rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease-in-out;
+            font-weight: 700; /* 太字 */
+            letter-spacing: 0.05em; /* 文字間隔を調整 */
         }
         .btn-custom:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
+            background: linear-gradient(45deg, #1976d2, #0097a7); /* ホバーで少し暗めのグラデーション */
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
         .footer-bg {
-            background-color: #17a2b8; /* フッターは水色系 */
-            padding: 1.5rem 0;
-            margin-top: 3rem;
-            border-top-left-radius: 1rem; /* 角丸 */
-            border-top-right-radius: 1rem; /* 角丸 */
+            background-color: #0d47a1; /* フッターは深い青 */
+            padding: 2rem 0;
+            margin-top: auto;
+            border-top-left-radius: 2rem;
+            border-top-right-radius: 2rem;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.4);
         }
-        /* レスポンシブ対応のためのfluid widths */
-        .container-fluid {
-            padding-left: 1rem;
-            padding-right: 1rem;
+
+        /* レスポンシブなタイポグラフィ（Tailwindと組み合わせ） */
+        h1 {
+            font-size: 3.5rem;
+            letter-spacing: -0.05em; /* 見出しの文字間隔を詰める */
         }
-        /* 適切なパディングとマージン */
-        .py-5 { padding-top: 3rem; padding-bottom: 3rem; }
-        .my-4 { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 5.5rem;
+            }
+        }
+        h2 {
+            font-size: 2.5rem;
+            letter-spacing: -0.02em;
+        }
+        @media (min-width: 768px) {
+            h2 {
+                font-size: 3.5rem;
+            }
+        }
+        h3 {
+            font-size: 2rem;
+            letter-spacing: -0.01em;
+        }
+        @media (min-width: 768px) {
+            h3 {
+                font-size: 2.75rem;
+            }
+        }
+        .lead {
+            font-size: 1.25rem;
+            opacity: 0.95; /* リードテキストの透明度を微調整 */
+        }
+        @media (min-width: 768px) {
+            .lead {
+                font-size: 1.6rem;
+            }
+        }
+        p, li {
+            font-size: 1.05rem; /* テキストサイズを微増 */
+            opacity: 0.9;
+        }
+        @media (min-width: 768px) {
+            p, li {
+                font-size: 1.15rem;
+            }
+        }
+
+        /* コンテナのレスポンシブな水平パディング */
+        .container {
+            padding-left: 1.5rem; /* パディングを少し増やす */
+            padding-right: 1.5rem;
+        }
+        /* Bootstrapのコンテナ幅のデフォルト値を上書き (Tailwindと連携) */
+        @media (min-width: 576px) { .container { max-width: 540px; } }
+        @media (min-width: 768px) { .container { max-width: 720px; } }
+        @media (min-width: 992px) { .container { max-width: 960px; } }
+        @media (min-width: 1200px) { .container { max-width: 1140px; } }
+        @media (min-width: 1400px) { .container { max-width: 1320px; } }
     </style>
 </head>
-<body>
+<body class="d-flex flex-column min-h-screen">
 
     <!-- ヘッダーセクション -->
-    <header class="header-bg text-white text-center shadow-lg">
-        <div class="container py-5">
-            <h1 class="display-4 fw-bold">Axe1lyze</h1>
-            <p class="lead accent-text">個人開発者です。一応。</p>
+    <header class="header-bg text-white text-center shadow-2xl">
+        <div class="container mx-auto px-4 py-16 md:py-20 lg:py-24">
+            <h1 class="display-4 fw-bold mb-3 md:mb-4">Axe1lyze</h1>
+            <p class="lead accent-text-cyan opacity-90">
+                未来を拓く、ゆるぎない無気力。
+                <br class="d-block d-md-none">
+                （理念だけは立派です）
+            </p>
         </div>
     </header>
 
     <!-- メインコンテンツセクション -->
-    <main class="container my-5">
-        <section class="section-bg text-center text-light shadow-md">
+    <main class="container mx-auto px-4 flex-grow my-8 md:my-12">
+        <section class="section-card text-center text-light shadow-lg">
             <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h2 class="mb-4 accent-text">特に何もないです。</h2>
-                    <p class="lead">
-                        このホームページは、特に目的もなく存在しています。<br>
-                        何かを期待されても困ります。<br>
-                        お問い合わせは、たぶん受け付けていません。
+                <div class="col-lg-8 col-md-10 px-4">
+                    <h2 class="mb-5 accent-text-blue font-bold">
+                        革新的なビジョンと、たぶんその実現
+                    </h2>
+                    <p class="lead mb-6">
+                        私たちは、<strong>最先端技術と革新的な思考</strong>を融合させ、
+                        社会に<strong>計り知れない価値</strong>を提供することを目指します。
+                        <br>
+                        そのために、<strong>日々努力...するかもしれない</strong>、といったところです。
+                        現状維持は、ある種の安定への貢献とも言えるでしょう。
                     </p>
-                    <a href="#" class="btn btn-custom btn-lg mt-4 shadow-sm" aria-disabled="true">
-                        とりあえずボタン
+                    <a href="#" class="btn btn-custom btn-lg mt-4 shadow-xl hover:shadow-2xl" aria-disabled="true">
+                        次世代への一歩を踏み出す（予定）
                     </a>
-                    <p class="text-muted mt-3">※押しても何も起こりません</p>
+                    <p class="text-muted mt-4 text-sm opacity-70">※このボタンは哲学的な意味合いしか持ちません</p>
                 </div>
             </div>
         </section>
 
-        <section class="section-bg text-center text-light my-5 shadow-md">
+        <section class="section-card text-center text-light shadow-lg my-8 md:my-12">
             <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h3 class="mb-3 accent-text">活動状況</h3>
-                    <p>
-                        現在、特に目立った活動はありません。<br>
-                        もし何かあれば、それはたまたまです。
+                <div class="col-lg-8 col-md-10 px-4">
+                    <h3 class="mb-4 accent-text-cyan font-bold">
+                        戦略的イニシアティブと成長戦略（漠然とした）
+                    </h3>
+                    <p class="mb-5">
+                        Axe1lyzeは、<strong>市場の潜在的ニーズを深く洞察</strong>し、
+                        <strong>持続可能な成長</strong>を追求するための戦略を<strong>検討中</strong>です。
+                        <br>
+                        具体的には、気が向いたら何か新しいことを始めるかもしれません。
+                        それまでは、既存の素晴らしさ（もしあれば）を享受しましょう。
                     </p>
-                    <ul class="list-unstyled mt-4">
-                        <li><span class="accent-text">プロジェクト1:</span> 構想中（永遠に）</li>
-                        <li><span class="accent-text">プロジェクト2:</span> 放置中</li>
-                        <li><span class="accent-text">新しいこと:</span> 考えるのが面倒です</li>
+                    <ul class="list-unstyled space-y-3">
+                        <li><span class="accent-text-blue fw-bold">プロジェクトα:</span> 構想は壮大。実装は未定。</li>
+                        <li><span class="accent-text-blue fw-bold">市場分析:</span> データ収集は完了。分析は追々。</li>
+                        <li><span class="accent-text-blue fw-bold">グローバル展開:</span> そのうち、気が向いたら。</li>
                     </ul>
+                    <p class="text-muted mt-4 text-sm opacity-70">※上記の進捗は、宇宙の気まぐれに左右されます</p>
                 </div>
             </div>
         </section>
     </main>
 
     <!-- フッターセクション -->
-    <footer class="footer-bg text-white text-center py-4 shadow-top">
-        <div class="container">
-            <p class="mb-0">&copy; 2025 Axe1lyze. All rights reserved. (多分)</p>
+    <footer class="footer-bg text-white text-center py-6 shadow-xl">
+        <div class="container mx-auto px-4">
+            <p class="mb-0 text-sm opacity-90">
+                &copy; 2025 Axe1lyze. All rights reserved. (義務感で書いています)
+            </p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS CDN (必要であれば) -->
+    <!-- Bootstrap JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 </html>
