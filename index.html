@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axe1lyze | やる気のないホームページ</title>
+    <!-- Inter フォントの読み込み -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- Tailwind CSS CDN (Bootstrapと併用可) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #212529; /* ダークな背景色 */
+            color: #f8f9fa; /* 明るいテキスト色 */
+        }
+        .header-bg {
+            background-color: #007bff; /* 青系（primary） */
+            padding: 2rem 0;
+            border-bottom-left-radius: 1rem; /* 角丸 */
+            border-bottom-right-radius: 1rem; /* 角丸 */
+        }
+        .section-bg {
+            background-color: #343a40; /* ダークグレー */
+            padding: 3rem 0;
+            margin-top: 2rem;
+            border-radius: 1rem; /* 角丸 */
+        }
+        .accent-text {
+            color: #17a2b8; /* 水色系（info）をアクセントに */
+        }
+        .btn-custom {
+            background-color: #007bff; /* ボタンも青系 */
+            border-color: #007bff;
+            color: white;
+            border-radius: 0.5rem; /* 角丸 */
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .footer-bg {
+            background-color: #17a2b8; /* フッターは水色系 */
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+            border-top-left-radius: 1rem; /* 角丸 */
+            border-top-right-radius: 1rem; /* 角丸 */
+        }
+        /* レスポンシブ対応のためのfluid widths */
+        .container-fluid {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        /* 適切なパディングとマージン */
+        .py-5 { padding-top: 3rem; padding-bottom: 3rem; }
+        .my-4 { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダーセクション -->
+    <header class="header-bg text-white text-center shadow-lg">
+        <div class="container py-5">
+            <h1 class="display-4 fw-bold">Axe1lyze</h1>
+            <p class="lead accent-text">個人開発者です。一応。</p>
+        </div>
+    </header>
+
+    <!-- メインコンテンツセクション -->
+    <main class="container my-5">
+        <section class="section-bg text-center text-light shadow-md">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="mb-4 accent-text">特に何もないです。</h2>
+                    <p class="lead">
+                        このホームページは、特に目的もなく存在しています。<br>
+                        何かを期待されても困ります。<br>
+                        お問い合わせは、たぶん受け付けていません。
+                    </p>
+                    <a href="#" class="btn btn-custom btn-lg mt-4 shadow-sm" aria-disabled="true">
+                        とりあえずボタン
+                    </a>
+                    <p class="text-muted mt-3">※押しても何も起こりません</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-bg text-center text-light my-5 shadow-md">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h3 class="mb-3 accent-text">活動状況</h3>
+                    <p>
+                        現在、特に目立った活動はありません。<br>
+                        もし何かあれば、それはたまたまです。
+                    </p>
+                    <ul class="list-unstyled mt-4">
+                        <li><span class="accent-text">プロジェクト1:</span> 構想中（永遠に）</li>
+                        <li><span class="accent-text">プロジェクト2:</span> 放置中</li>
+                        <li><span class="accent-text">新しいこと:</span> 考えるのが面倒です</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- フッターセクション -->
+    <footer class="footer-bg text-white text-center py-4 shadow-top">
+        <div class="container">
+            <p class="mb-0">&copy; 2025 Axe1lyze. All rights reserved. (多分)</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS CDN (必要であれば) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</body>
+</html>
