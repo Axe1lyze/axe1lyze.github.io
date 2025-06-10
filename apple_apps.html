@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apps</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            /* 固定ヘッダー分の余白を確保 */
+            padding-top: 130px; /* Adjust this value if header height changes */
+            margin: 0; /* bodyのデフォルトマージンを削除 */
+        }
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #1e1e1e; /* テーブルの背景色に合わせる */
+            color: #e0e0e0;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 1000; /* 他の要素より手前に表示 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .fixed-header h1 {
+            margin: 0 0 10px 0; /* タイトル下の余白 */
+            color: #fff;
+        }
+        .table-dark {
+            background-color: #1e1e1e;
+        }
+        a {
+            color: #90caf9;
+        }
+        a.btn-primary {
+            background-color: #2196f3;
+            border-color: #2196f3;
+        }
+        a.btn-default {
+            background-color: #424242;
+            border-color: #424242;
+            color: #e0e0e0;
+        }
+        a.btn-link {
+            color: #90caf9;
+        }
+        a.btn-link:hover {
+            color: #64b5f6;
+        }
+        /* 国選択ボタンテーブルのスタイル調整 */
+        .country-selection-table {
+            width: 90%; /* ヘッダー内で幅を調整 */
+            max-width: 500px; /* 最大幅を設定して中央に寄せる */
+            margin: 0 auto; /* 中央寄せ */
+            border-spacing: 5px; /* セル間のスペース */
+            border-collapse: separate; /* border-spacingを適用するために必要 */
+        }
+        .country-selection-table td {
+            padding: 0 2px; /* セルのパディングを減らす */
+        }
+        .country-selection-table .btn {
+            margin: 0; /* ボタンの余白を削除 */
+            padding: 5px 10px; /* ボタンのパディングを調整 */
+            font-size: 0.9em;
+        }
+
+        /* メインコンテンツのコンテナ */
+        .main-content-container {
+            width: 100%; /* フル幅を使用 */
+            padding: 0 15px; /* 左右に少しパディング */
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05); /* ストライプの調整 */
+        }
+    </style>
+    <!-- jQueryのCDNを読み込む -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <header class="fixed-header">
+        <h1>Apps</h1>
+        <table class="table table-dark table-sm country-selection-table" id="country-buttons">
+            <tbody>
+                <tr>
+                    <td><a href="#" class="btn btn-default btn-block btn-sm" data-country="us">US</a></td>
+                    <td><a href="#" class="btn btn-default btn-block btn-sm" data-country="jp">JP</a></td>
+                    <td><a href="#" class="btn btn-default btn-block btn-sm" data-country="cn">CN</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </header>
+
+    <div class="main-content-container">
+        <table class="table table-dark table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"></th>
+                    <th scope="col">タイトル</th>
+                    <th scope="col">評価</th>
+                    <th scope="col">評価数</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody id="app-list-body">
+                <!-- アプリデータはここにjQueryで挿入されます -->
+            </tbody>
+        </table>
+    </div>
+
+<script>
+    $(document).ready(function() {
+        const $appListBody = $('#app-list-body');
+        const $countryButtons = $('#country-buttons');
+        let currentCountry = 'us'; // デフォルトの国
+
+        const fetchAndDisplayApps = (country) => {
+            const apiUrl = `https://itunes.apple.com/lookup?id=939316877&entity=software&country=${country}&limit=200`;
+
+            $.ajax({
+                url: apiUrl,
+                method: 'GET',
+                // JSONPを使用するようにdataTypeを変更
+                dataType: 'jsonp', // Changed from 'json' to 'jsonp' to handle cross-origin requests
+                success: function(data) {
+                    if (!data || !data.results) {
+                        $appListBody.html('<tr><td colspan="6">データの取得に失敗しました。</td></tr>');
+                        return;
+                    }
+
+                    // Track IDの降順にソート
+                    const appList = data.results.sort((a, b) => b.trackId - a.trackId);
+
+                    $appListBody.empty(); // 既存のリストをクリア
+
+                    $.each(appList, function(index, app) {
+                        if (app.trackName && app.averageUserRating && app.userRatingCount && app.artworkUrl100) {
+                            const twitterQuery = $.param({
+                                q: `url:apps.apple.com url:id${app.trackId}`,
+                                f: 'live'
+                            });
+                            const row = `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td style="white-space: nowrap;">
+                                        <img src="${app.artworkUrl100}" alt="App Icon" style="width: 60px; height: 60px;">
+                                    </td>
+                                    <td>
+                                        <h5>${app.trackName}</h5>
+                                        <a href="https://appstoreconnect.apple.com/analytics/app/ltd/${app.trackId}" target="_blank" class="btn btn-sm btn-link">
+                                            全期間
+                                        </a>
+                                        <a href="https://appstoreconnect.apple.com/analytics/app/d90/${app.trackId}" target="_blank" class="btn btn-sm btn-link">
+                                            90日
+                                        </a>
+                                        <a href="https://appstoreconnect.apple.com/analytics/app/d30/${app.trackId}" target="_blank" class="btn btn-sm btn-link">
+                                            30日
+                                        </a>
+                                        <a href="https://appstoreconnect.apple.com/analytics/app/d7/${app.trackId}" target="_blank" class="btn btn-sm btn-link">
+                                            7日
+                                        </a>
+                                        <a href="https://x.com/search?${twitterQuery}" target="_blank" class="btn btn-sm btn-link">
+                                            Twitter
+                                        </a>
+                                    </td>
+                                    <td>${app.averageUserRating.toFixed(1)}</td>
+                                    <td>${app.userRatingCount}</td>
+                                    <td></td>
+                                </tr>
+                            `;
+                            $appListBody.append(row);
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('APIの取得に失敗しました:', status, error, xhr); // Added xhr for more detailed error logging
+                    $appListBody.html('<tr><td colspan="6">データの取得中にエラーが発生しました。</td></tr>');
+                }
+            });
+
+            // 国ボタンのアクティブ状態を更新
+            $countryButtons.find('.btn').removeClass('btn-primary').addClass('btn-default');
+            $countryButtons.find(`[data-country="${country}"]`).removeClass('btn-default').addClass('btn-primary');
+        };
+
+        // 国ボタンのクリックイベントリスナーを設定
+        $countryButtons.on('click', 'a', function(event) {
+            event.preventDefault(); // デフォルトのリンク動作を防止
+            currentCountry = $(this).data('country');
+            fetchAndDisplayApps(currentCountry);
+        });
+
+        // 初回ロード時にデフォルトの国でデータを取得
+        fetchAndDisplayApps(currentCountry);
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
