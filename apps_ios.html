@@ -115,10 +115,43 @@
         </table>
     </div>
 
+    <!-- アプリ行のテンプレート -->
+    <script id="app-row-template" type="text/html">
+        <tr>
+            <td>{{index}}</td>
+            <td style="white-space: nowrap;">
+                <img src="{{artworkUrl100}}" alt="App Icon" style="width: 60px; height: 60px;">
+            </td>
+            <td>
+                <!-- アプリタイトルをリンクに変換 -->
+                <h5><a href="{{trackViewUrl}}" target="_blank">{{trackName}}</a></h5>
+                <a href="https://appstoreconnect.apple.com/analytics/app/ltd/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
+                    全期間
+                </a>
+                <a href="https://appstoreconnect.apple.com/analytics/app/d90/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
+                    90日
+                </a>
+                <a href="https://appstoreconnect.apple.com/analytics/app/d30/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
+                    30日
+                </a>
+                <a href="https://appstoreconnect.apple.com/analytics/app/d7/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
+                    7日
+                </a>
+                <a href="https://x.com/search?q=url:apps.apple.com url:id{{trackId}}&f=live" target="_blank" class="btn btn-sm btn-link">
+                    Twitter
+                </a>
+            </td>
+            <td>{{averageUserRating}}</td>
+            <td>{{userRatingCount}}</td>
+            <td></td>
+        </tr>
+    </script>
+
 <script>
     $(document).ready(function() {
         const $appListBody = $('#app-list-body');
         const $countryButtons = $('#country-buttons');
+        const $appRowTemplate = $('#app-row-template').html(); // テンプレートを取得
         let currentCountry = 'us'; // デフォルトの国
 
         const fetchAndDisplayApps = (country) => {
@@ -127,7 +160,6 @@
             $.ajax({
                 url: apiUrl,
                 method: 'GET',
-                // JSONPを使用するようにdataTypeを変更
                 dataType: 'jsonp', // Changed from 'json' to 'jsonp' to handle cross-origin requests
                 success: function(data) {
                     if (!data || !data.results) {
@@ -141,41 +173,19 @@
                     $appListBody.empty(); // 既存のリストをクリア
 
                     $.each(appList, function(index, app) {
-                        if (app.trackName && app.averageUserRating && app.userRatingCount && app.artworkUrl100) {
-                            const twitterQuery = $.param({
-                                q: `url:apps.apple.com url:id${app.trackId}`,
-                                f: 'live'
-                            });
-                            const row = `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td style="white-space: nowrap;">
-                                        <img src="${app.artworkUrl100}" alt="App Icon" style="width: 60px; height: 60px;">
-                                    </td>
-                                    <td>
-                                        <h5>${app.trackName}</h5>
-                                        <a href="https://appstoreconnect.apple.com/analytics/app/ltd/${app.trackId}" target="_blank" class="btn btn-sm btn-link">
-                                            全期間
-                                        </a>
-                                        <a href="https://appstoreconnect.apple.com/analytics/app/d90/${app.trackId}" target="_blank" class="btn btn-sm btn-link">
-                                            90日
-                                        </a>
-                                        <a href="https://appstoreconnect.apple.com/analytics/app/d30/${app.trackId}" target="_blank" class="btn btn-sm btn-link">
-                                            30日
-                                        </a>
-                                        <a href="https://appstoreconnect.apple.com/analytics/app/d7/${app.trackId}" target="_blank" class="btn btn-sm btn-link">
-                                            7日
-                                        </a>
-                                        <a href="https://x.com/search?${twitterQuery}" target="_blank" class="btn btn-sm btn-link">
-                                            Twitter
-                                        </a>
-                                    </td>
-                                    <td>${app.averageUserRating.toFixed(1)}</td>
-                                    <td>${app.userRatingCount}</td>
-                                    <td></td>
-                                </tr>
-                            `;
-                            $appListBody.append(row);
+                        // iOSアプリ（kindが'software'）のみを対象とするフィルタリング
+                        if (app.kind === 'software') {
+                            // テンプレートをインスタンス化し、データをバインド
+                            let rowHtml = $appRowTemplate;
+                            rowHtml = rowHtml.replace(/{{index}}/g, index + 1);
+                            rowHtml = rowHtml.replace(/{{artworkUrl100}}/g, app.artworkUrl100 || 'https://placehold.co/60x60/cccccc/000000?text=No+Image'); // Fallback for artwork
+                            rowHtml = rowHtml.replace(/{{trackName}}/g, app.trackName || 'N/A'); // Fallback for track name
+                            rowHtml = rowHtml.replace(/{{trackId}}/g, app.trackId);
+                            rowHtml = rowHtml.replace(/{{averageUserRating}}/g, app.averageUserRating ? app.averageUserRating.toFixed(1) : 'N/A'); // Fallback for rating
+                            rowHtml = rowHtml.replace(/{{userRatingCount}}/g, app.userRatingCount || 'N/A'); // Fallback for rating count
+                            rowHtml = rowHtml.replace(/{{trackViewUrl}}/g, app.trackViewUrl || '#'); // Fallback for app store link
+                            
+                            $appListBody.append(rowHtml);
                         }
                     });
                 },
