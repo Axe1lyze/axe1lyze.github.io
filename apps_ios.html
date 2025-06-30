@@ -153,7 +153,11 @@
         const $countryButtons = $('#country-buttons');
         const $appRowTemplate = $('#app-row-template').html(); // テンプレートを取得
         let currentCountry = 'us'; // デフォルトの国
-        const developerId = '939316877'; //1819475901
+
+        // クエリパラメータからdeveloperIdを取得、存在しない場合はデフォルト値を使用
+        const urlParams = new URLSearchParams(window.location.search);
+        const developerId = urlParams.get('developerId') || '939316877'; // developerIdをクエリパラメータから取得し、存在しない場合はデフォルト値を設定
+
         const fetchAndDisplayApps = (country) => {
             const apiUrl = `https://itunes.apple.com/lookup?id=${developerId}&entity=software&country=${country}&limit=200`;
 
