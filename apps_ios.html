@@ -98,7 +98,9 @@
     </header>
 
     <div class="main-content-container">
-        <a href="https://appstoreconnect.apple.com/trends" target="_blank" class="btn btn-link btn-block">Trends</a>
+        <div class="d-grid mx-auto">
+            <a href="https://appstoreconnect.apple.com/trends" target="_blank" class="btn btn-link btn-block">Trends</a>
+        </div>
         <table class="table table-dark table-striped table-sm">
             <thead>
                 <tr>
@@ -177,21 +179,18 @@
 
                     $appListBody.empty(); // 既存のリストをクリア
 
-                    $.each(appList, function(index, app) {
-                        // iOSアプリ（kindが'software'）のみを対象とするフィルタリング
-                        if (app.kind === 'software') {
-                            // テンプレートをインスタンス化し、データをバインド
-                            let rowHtml = $appRowTemplate;
-                            rowHtml = rowHtml.replace(/{{index}}/g, index + 1);
-                            rowHtml = rowHtml.replace(/{{artworkUrl100}}/g, app.artworkUrl100 || 'https://placehold.co/60x60/cccccc/000000?text=No+Image'); // Fallback for artwork
-                            rowHtml = rowHtml.replace(/{{trackName}}/g, app.trackName || 'N/A'); // Fallback for track name
-                            rowHtml = rowHtml.replace(/{{trackId}}/g, app.trackId);
-                            rowHtml = rowHtml.replace(/{{averageUserRating}}/g, app.averageUserRating ? app.averageUserRating.toFixed(1) : 'N/A'); // Fallback for rating
-                            rowHtml = rowHtml.replace(/{{userRatingCount}}/g, app.userRatingCount || 'N/A'); // Fallback for rating count
-                            rowHtml = rowHtml.replace(/{{trackViewUrl}}/g, app.trackViewUrl || '#'); // Fallback for app store link
-                            
-                            $appListBody.append(rowHtml);
-                        }
+                    // iOSアプリ（kindが'software'）のみを対象とするフィルタリング
+                    $.each(appList.filter(app=>{ return app.kind==='software' }), function(index, app) {
+                        let rowHtml = $appRowTemplate;
+                        rowHtml = rowHtml.replace(/{{index}}/g, index + 1);
+                        rowHtml = rowHtml.replace(/{{artworkUrl100}}/g, app.artworkUrl100 || 'https://placehold.co/60x60/cccccc/000000?text=No+Image'); // Fallback for artwork
+                        rowHtml = rowHtml.replace(/{{trackName}}/g, app.trackName || 'N/A'); // Fallback for track name
+                        rowHtml = rowHtml.replace(/{{trackId}}/g, app.trackId);
+                        rowHtml = rowHtml.replace(/{{averageUserRating}}/g, app.averageUserRating ? app.averageUserRating.toFixed(1) : 'N/A'); // Fallback for rating
+                        rowHtml = rowHtml.replace(/{{userRatingCount}}/g, app.userRatingCount || 'N/A'); // Fallback for rating count
+                        rowHtml = rowHtml.replace(/{{trackViewUrl}}/g, app.trackViewUrl || '#'); // Fallback for app store link
+                        
+                        $appListBody.append(rowHtml);
                     });
                 },
                 error: function(xhr, status, error) {
