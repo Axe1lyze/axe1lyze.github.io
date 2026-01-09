@@ -131,14 +131,17 @@
                 <a href="https://appstoreconnect.apple.com/analytics/app/ltd/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
                     全期間
                 </a>
+                <a href="https://appstoreconnect.apple.com/analytics/app/r:{{startDate}}:{{endDate}}/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
+                    1y
+                </a>
                 <a href="https://appstoreconnect.apple.com/analytics/app/d90/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
-                    90日
+                    90d
                 </a>
                 <a href="https://appstoreconnect.apple.com/analytics/app/d30/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
-                    30日
+                    30d
                 </a>
                 <a href="https://appstoreconnect.apple.com/analytics/app/d7/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
-                    7日
+                    7d
                 </a>
                 <a href="https://x.com/search?q=url:apps.apple.com url:id{{trackId}}&f=live" target="_blank" class="btn btn-sm btn-link">
                     Twitter
@@ -178,6 +181,18 @@
                     const appList = data.results.sort((a, b) => b.trackId - a.trackId);
 
                     $appListBody.empty(); // 既存のリストをクリア
+                    
+                    const formatDate = (date) => {
+                        const yyyy = date.getFullYear();
+                        const mm = String(date.getMonth() + 1).padStart(2, '0');
+                        const dd = String(date.getDate()).padStart(2, '0');
+                        return `${yyyy}${mm}${dd}`;
+                        };
+
+                        
+                    var endDate = new Date();
+                    var startDate = new Date();
+                    startDate.setFullYear(endDate.getFullYear() - 1);
 
                     // iOSアプリ（kindが'software'）のみを対象とするフィルタリング
                     $.each(appList.filter(app=>{ return app.kind==='software' }), function(index, app) {
@@ -189,6 +204,10 @@
                         rowHtml = rowHtml.replace(/{{averageUserRating}}/g, app.averageUserRating ? app.averageUserRating.toFixed(1) : 'N/A'); // Fallback for rating
                         rowHtml = rowHtml.replace(/{{userRatingCount}}/g, app.userRatingCount || 'N/A'); // Fallback for rating count
                         rowHtml = rowHtml.replace(/{{trackViewUrl}}/g, app.trackViewUrl || '#'); // Fallback for app store link
+
+
+                        rowHtml = rowHtml.replace(/{{startDate}}/g, formatDate(startDate));
+                        rowHtml = rowHtml.replace(/{{endDate}}/g, formatDate(endDate));
                         
                         $appListBody.append(rowHtml);
                     });
