@@ -9,27 +9,26 @@
         body {
             background-color: #121212;
             color: #e0e0e0;
-            /* 固定ヘッダー分の余白を確保 */
-            padding-top: 130px; /* Adjust this value if header height changes */
-            margin: 0; /* bodyのデフォルトマージンを削除 */
+            padding-top: 130px; 
+            margin: 0;
         }
         .fixed-header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #1e1e1e; /* テーブルの背景色に合わせる */
+            background-color: #1e1e1e;
             color: #e0e0e0;
             padding: 15px 0;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-            z-index: 1000; /* 他の要素より手前に表示 */
+            z-index: 1000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
         .fixed-header h1 {
-            margin: 0 0 10px 0; /* タイトル下の余白 */
+            margin: 0 0 10px 0;
             color: #fff;
         }
         .table-dark {
@@ -38,55 +37,33 @@
         a {
             color: #90caf9;
         }
-        a.btn-primary {
-            background-color: #2196f3;
-            border-color: #2196f3;
-        }
-        a.btn-default {
-            background-color: #424242;
-            border-color: #424242;
-            color: #e0e0e0;
-        }
-        a.btn-link {
-            color: #90caf9;
-        }
-        a.btn-link:hover {
-            color: #64b5f6;
-        }
-        /* 国選択ボタンテーブルのスタイル調整 */
-        .country-selection-table {
-            width: 90%; /* ヘッダー内で幅を調整 */
-            max-width: 500px; /* 最大幅を設定して中央に寄せる */
-            margin: 0 auto; /* 中央寄せ */
-            border-spacing: 5px; /* セル間のスペース */
-            border-collapse: separate; /* border-spacingを適用するために必要 */
-        }
-        .country-selection-table td {
-            padding: 0 2px; /* セルのパディングを減らす */
-        }
-        .country-selection-table .btn {
-            margin: 0; /* ボタンの余白を削除 */
-            padding: 5px 10px; /* ボタンのパディングを調整 */
-            font-size: 0.9em;
-        }
-
-        /* メインコンテンツのコンテナ */
         .main-content-container {
-            width: 100%; /* フル幅を使用 */
-            padding: 0 15px; /* 左右に少しパディング */
+            width: 100%;
+            padding: 0 15px;
         }
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.05); /* ストライプの調整 */
+        /* Modalのダークモード調整 */
+        .modal-content {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            border: 1px solid #444;
+        }
+        .modal-header {
+            border-bottom: 1px solid #444;
+        }
+        .modal-footer {
+            border-top: 1px solid #444;
+        }
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
         }
     </style>
-    <!-- jQueryのCDNを読み込む -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
 
     <header class="fixed-header">
         <h1>iOS Apps</h1>
-        <table class="table table-dark table-sm country-selection-table" id="country-buttons">
+        <table class="table table-dark table-sm country-selection-table" id="country-buttons" style="max-width:300px;">
             <tbody>
                 <tr>
                     <td><a href="#" class="btn btn-default btn-block btn-sm" data-country="us">US</a></td>
@@ -109,47 +86,66 @@
                     <th scope="col">タイトル</th>
                     <th scope="col">評価</th>
                     <th scope="col">評価数</th>
-                    <th scope="col"></th>
+                    <th scope="col">詳細</th>
                 </tr>
             </thead>
             <tbody id="app-list-body">
-                <!-- アプリデータはここにjQueryで挿入されます -->
             </tbody>
         </table>
     </div>
 
-    <!-- アプリ行のテンプレート -->
+    <div class="modal fade" id="appInfoModal" tabindex="-1" aria-labelledby="appInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAppName">App Name</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <strong>最新バージョン:</strong> <span id="modalVersion"></span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>最終更新日:</strong> <span id="modalReleaseDate"></span>
+                    </div>
+                    <div>
+                        <strong>説明:</strong>
+                        <div id="modalDescription" style="white-space: pre-wrap; font-size: 0.85em; max-height: 250px; overflow-y: auto; background: #2a2a2a; padding: 10px; border-radius: 4px; margin-top: 5px;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script id="app-row-template" type="text/html">
         <tr>
             <td>{{index}}</td>
             <td style="white-space: nowrap;">
-                <img src="{{artworkUrl100}}" alt="App Icon" style="width: 60px; height: 60px;">
+                <img src="{{artworkUrl100}}" alt="App Icon" style="width: 60px; height: 60px; border-radius: 12px;">
             </td>
             <td>
-                <!-- アプリタイトルをリンクに変換 -->
                 <h5><a href="{{trackViewUrl}}" target="_blank">{{trackName}}</a></h5>
-                <a href="https://appstoreconnect.apple.com/analytics/app/ltd/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
-                    全期間
-                </a>
-                <a href="https://appstoreconnect.apple.com/analytics/app/r:{{startDate}}:{{endDate}}/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
-                    1y
-                </a>
-                <a href="https://appstoreconnect.apple.com/analytics/app/d90/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
-                    90d
-                </a>
-                <a href="https://appstoreconnect.apple.com/analytics/app/d30/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
-                    30d
-                </a>
-                <a href="https://appstoreconnect.apple.com/analytics/app/d7/{{trackId}}" target="_blank" class="btn btn-sm btn-link">
-                    7d
-                </a>
-                <a href="https://x.com/search?q=url:apps.apple.com url:id{{trackId}}&f=live" target="_blank" class="btn btn-sm btn-link">
-                    Twitter
-                </a>
+                <a href="https://appstoreconnect.apple.com/analytics/app/ltd/{{trackId}}" target="_blank" class="btn btn-sm btn-link">全期間</a>
+                <a href="https://appstoreconnect.apple.com/analytics/app/r:{{startDate}}:{{endDate}}/{{trackId}}" target="_blank" class="btn btn-sm btn-link">1y</a>
+                <a href="https://appstoreconnect.apple.com/analytics/app/d90/{{trackId}}" target="_blank" class="btn btn-sm btn-link">90d</a>
+                <a href="https://appstoreconnect.apple.com/analytics/app/d30/{{trackId}}" target="_blank" class="btn btn-sm btn-link">30d</a>
+                <a href="https://appstoreconnect.apple.com/analytics/app/d7/{{trackId}}" target="_blank" class="btn btn-sm btn-link">7d</a>
+                <a href="https://x.com/search?q=url:apps.apple.com url:id{{trackId}}&f=live" target="_blank" class="btn btn-sm btn-link">Twitter</a>
             </td>
             <td>{{averageUserRating}}</td>
             <td>{{userRatingCount}}</td>
-            <td></td>
+            <td>
+                <button type="button" class="btn btn-outline-info btn-sm info-btn" 
+                    data-name="{{trackName}}" 
+                    data-version="{{version}}" 
+                    data-release="{{currentVersionReleaseDate}}" 
+                    data-desc="{{description}}">
+                    ℹ️
+                </button>
+            </td>
         </tr>
     </script>
 
@@ -157,12 +153,19 @@
     $(document).ready(function() {
         const $appListBody = $('#app-list-body');
         const $countryButtons = $('#country-buttons');
-        const $appRowTemplate = $('#app-row-template').html(); // テンプレートを取得
-        let currentCountry = 'us'; // デフォルトの国
+        const $appRowTemplate = $('#app-row-template').html();
+        let currentCountry = 'us';
 
-        // クエリパラメータからdeveloperIdを取得、存在しない場合はデフォルト値を使用
         const urlParams = new URLSearchParams(window.location.search);
-        const developerId = urlParams.get('developerId') || '939316877'; // developerIdをクエリパラメータから取得し、存在しない場合はデフォルト値を設定
+        const developerId = urlParams.get('developerId') || '939316877';
+
+        const formatDate = (date) => {
+            const d = new Date(date);
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}/${mm}/${dd}`;
+        };
 
         const fetchAndDisplayApps = (country) => {
             const apiUrl = `https://itunes.apple.com/lookup?id=${developerId}&entity=software&country=${country}&limit=200`;
@@ -170,67 +173,71 @@
             $.ajax({
                 url: apiUrl,
                 method: 'GET',
-                dataType: 'jsonp', // Changed from 'json' to 'jsonp' to handle cross-origin requests
+                dataType: 'jsonp',
                 success: function(data) {
                     if (!data || !data.results) {
                         $appListBody.html('<tr><td colspan="6">データの取得に失敗しました。</td></tr>');
                         return;
                     }
 
-                    // Track IDの降順にソート
                     const appList = data.results.sort((a, b) => b.trackId - a.trackId);
-
-                    $appListBody.empty(); // 既存のリストをクリア
+                    $appListBody.empty();
                     
-                    const formatDate = (date) => {
-                        const yyyy = date.getFullYear();
-                        const mm = String(date.getMonth() + 1).padStart(2, '0');
-                        const dd = String(date.getDate()).padStart(2, '0');
-                        return `${yyyy}${mm}${dd}`;
-                        };
+                    const now = new Date();
+                    const oneYearAgo = new Date();
+                    oneYearAgo.setFullYear(now.getFullYear() - 1);
+                    
+                    const dateToString = (date) => {
+                        return date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0') + String(date.getDate()).padStart(2, '0');
+                    };
 
-                        
-                    var endDate = new Date();
-                    var startDate = new Date();
-                    startDate.setFullYear(endDate.getFullYear() - 1);
-
-                    // iOSアプリ（kindが'software'）のみを対象とするフィルタリング
-                    $.each(appList.filter(app=>{ return app.kind==='software' }), function(index, app) {
+                    $.each(appList.filter(app => app.kind === 'software'), function(index, app) {
                         let rowHtml = $appRowTemplate;
                         rowHtml = rowHtml.replace(/{{index}}/g, index + 1);
-                        rowHtml = rowHtml.replace(/{{artworkUrl100}}/g, app.artworkUrl100 || 'https://placehold.co/60x60/cccccc/000000?text=No+Image'); // Fallback for artwork
-                        rowHtml = rowHtml.replace(/{{trackName}}/g, app.trackName || 'N/A'); // Fallback for track name
+                        rowHtml = rowHtml.replace(/{{artworkUrl100}}/g, app.artworkUrl100 || '');
+                        rowHtml = rowHtml.replace(/{{trackName}}/g, app.trackName || 'N/A');
                         rowHtml = rowHtml.replace(/{{trackId}}/g, app.trackId);
-                        rowHtml = rowHtml.replace(/{{averageUserRating}}/g, app.averageUserRating ? app.averageUserRating.toFixed(1) : 'N/A'); // Fallback for rating
-                        rowHtml = rowHtml.replace(/{{userRatingCount}}/g, app.userRatingCount || 'N/A'); // Fallback for rating count
-                        rowHtml = rowHtml.replace(/{{trackViewUrl}}/g, app.trackViewUrl || '#'); // Fallback for app store link
+                        rowHtml = rowHtml.replace(/{{averageUserRating}}/g, app.averageUserRating ? app.averageUserRating.toFixed(1) : 'N/A');
+                        rowHtml = rowHtml.replace(/{{userRatingCount}}/g, app.userRatingCount || 'N/A');
+                        rowHtml = rowHtml.replace(/{{trackViewUrl}}/g, app.trackViewUrl || '#');
+                        
+                        // Modal用の追加データ
+                        rowHtml = rowHtml.replace(/{{version}}/g, app.version || 'N/A');
+                        rowHtml = rowHtml.replace(/{{currentVersionReleaseDate}}/g, app.currentVersionReleaseDate ? formatDate(app.currentVersionReleaseDate) : 'N/A');
+                        // HTML属性に安全に入れるためエスケープ簡易処理
+                        const escapedDesc = (app.description || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                        rowHtml = rowHtml.replace(/{{description}}/g, escapedDesc);
 
-
-                        rowHtml = rowHtml.replace(/{{startDate}}/g, formatDate(startDate));
-                        rowHtml = rowHtml.replace(/{{endDate}}/g, formatDate(endDate));
+                        rowHtml = rowHtml.replace(/{{startDate}}/g, dateToString(oneYearAgo));
+                        rowHtml = rowHtml.replace(/{{endDate}}/g, dateToString(now));
                         
                         $appListBody.append(rowHtml);
                     });
-                },
-                error: function(xhr, status, error) {
-                    console.error('APIの取得に失敗しました:', status, error, xhr); // Added xhr for more detailed error logging
-                    $appListBody.html('<tr><td colspan="6">データの取得中にエラーが発生しました。</td></tr>');
                 }
             });
 
-            // 国ボタンのアクティブ状態を更新
             $countryButtons.find('.btn').removeClass('btn-primary').addClass('btn-default');
             $countryButtons.find(`[data-country="${country}"]`).removeClass('btn-default').addClass('btn-primary');
         };
 
-        // 国ボタンのクリックイベントリスナーを設定
+        // Modal表示のイベント
+        $(document).on('click', '.info-btn', function() {
+            const btn = $(this);
+            $('#modalAppName').text(btn.data('name'));
+            $('#modalVersion').text(btn.data('version'));
+            $('#modalReleaseDate').text(btn.data('release'));
+            $('#modalDescription').text(btn.data('desc'));
+            
+            const infoModal = new bootstrap.Modal(document.getElementById('appInfoModal'));
+            infoModal.show();
+        });
+
         $countryButtons.on('click', 'a', function(event) {
-            event.preventDefault(); // デフォルトのリンク動作を防止
+            event.preventDefault();
             currentCountry = $(this).data('country');
             fetchAndDisplayApps(currentCountry);
         });
 
-        // 初回ロード時にデフォルトの国でデータを取得
         fetchAndDisplayApps(currentCountry);
     });
 </script>
