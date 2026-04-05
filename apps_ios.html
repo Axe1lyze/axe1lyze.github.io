@@ -201,7 +201,7 @@
                         rowHtml = rowHtml.replace(/{{averageUserRating}}/g, app.averageUserRating ? app.averageUserRating.toFixed(1) : 'N/A');
                         rowHtml = rowHtml.replace(/{{userRatingCount}}/g, app.userRatingCount || 'N/A');
                         rowHtml = rowHtml.replace(/{{trackViewUrl}}/g, app.trackViewUrl || '#');
-                        rowHtml = rowHtml.replace(/{{countryCode}}/g, currentCountry);
+                        rowHtml = rowHtml.replace(/{{countryCode}}/g, currentCountry.toUpperCase());
                         
                         // Modal用の追加データ
                         rowHtml = rowHtml.replace(/{{version}}/g, app.version || 'N/A');
