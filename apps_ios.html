@@ -12,6 +12,7 @@
             padding-top: 130px; 
             margin: 0;
         }
+
         .fixed-header {
             position: fixed;
             top: 0;
@@ -31,6 +32,7 @@
             margin: 0 0 10px 0;
             color: #fff;
         }
+        
         .table-dark {
             background-color: #1e1e1e;
         }
@@ -56,6 +58,22 @@
         .btn-close-white {
             filter: invert(1) grayscale(100%) brightness(200%);
         }
+
+        /* 国選択ボタンテーブルの枠線を完全に消去
+           Bootstrap 5 のデフォルト border-top/bottom を打ち消す
+        */
+        .country-selection-table, 
+        .country-selection-table tr, 
+        .country-selection-table td {
+            border: none !important;
+            border-style: none !important;
+            box-shadow: none !important;
+        }
+
+        .country-selection-table .btn {
+            transition: all 0.2s;
+            text-decoration: none;
+        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
@@ -63,12 +81,12 @@
 
     <header class="fixed-header">
         <h1>iOS Apps</h1>
-        <table class="table table-dark table-sm country-selection-table" id="country-buttons" style="max-width:300px;">
+        <table class="table table-dark table-sm country-selection-table" id="country-buttons" style="max-width:300px; margin-bottom: 0;">
             <tbody>
                 <tr>
-                    <td><a href="#" class="btn btn-default btn-block btn-sm" data-country="us">US</a></td>
-                    <td><a href="#" class="btn btn-default btn-block btn-sm" data-country="jp">JP</a></td>
-                    <td><a href="#" class="btn btn-default btn-block btn-sm" data-country="cn">CN</a></td>
+                    <td><a href="#" class="btn btn-outline-light btn-block btn-sm w-100" data-country="us">US</a></td>
+                    <td><a href="#" class="btn btn-outline-light btn-block btn-sm w-100" data-country="jp">JP</a></td>
+                    <td><a href="#" class="btn btn-outline-light btn-block btn-sm w-100" data-country="cn">CN</a></td>
                 </tr>
             </tbody>
         </table>
@@ -192,7 +210,13 @@
                         return date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0') + String(date.getDate()).padStart(2, '0');
                     };
 
-                    $.each(appList.filter(app => app.kind === 'software'), function(index, app) {
+                    const softwareApps = appList.filter(app => app.kind === 'software');
+                    if (softwareApps.length === 0) {
+                        $appListBody.html('<tr><td colspan="6">該当するアプリが見つかりませんでした。</td></tr>');
+                        return;
+                    }
+
+                    $.each(softwareApps, function(index, app) {
                         let rowHtml = $appRowTemplate;
                         rowHtml = rowHtml.replace(/{{index}}/g, index + 1);
                         rowHtml = rowHtml.replace(/{{artworkUrl100}}/g, app.artworkUrl100 || '');
@@ -203,10 +227,8 @@
                         rowHtml = rowHtml.replace(/{{trackViewUrl}}/g, app.trackViewUrl || '#');
                         rowHtml = rowHtml.replace(/{{countryCode}}/g, currentCountry.toUpperCase());
                         
-                        // Modal用の追加データ
                         rowHtml = rowHtml.replace(/{{version}}/g, app.version || 'N/A');
                         rowHtml = rowHtml.replace(/{{currentVersionReleaseDate}}/g, app.currentVersionReleaseDate ? formatDate(app.currentVersionReleaseDate) : 'N/A');
-                        // HTML属性に安全に入れるためエスケープ簡易処理
                         const escapedDesc = (app.description || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
                         rowHtml = rowHtml.replace(/{{description}}/g, escapedDesc);
 
@@ -218,11 +240,11 @@
                 }
             });
 
-            $countryButtons.find('.btn').removeClass('btn-primary').addClass('btn-default');
-            $countryButtons.find(`[data-country="${country}"]`).removeClass('btn-default').addClass('btn-primary');
+            // ボタンの状態更新
+            $countryButtons.find('.btn').removeClass('btn-primary').addClass('btn-outline-light');
+            $countryButtons.find(`[data-country="${country}"]`).removeClass('btn-outline-light').addClass('btn-primary');
         };
 
-        // Modal表示のイベント
         $(document).on('click', '.info-btn', function() {
             const btn = $(this);
             $('#modalAppName').text(btn.data('name'));
@@ -236,8 +258,11 @@
 
         $countryButtons.on('click', 'a', function(event) {
             event.preventDefault();
-            currentCountry = $(this).data('country');
-            fetchAndDisplayApps(currentCountry);
+            const selectedCountry = $(this).data('country');
+            if (currentCountry !== selectedCountry) {
+                currentCountry = selectedCountry;
+                fetchAndDisplayApps(currentCountry);
+            }
         });
 
         fetchAndDisplayApps(currentCountry);
